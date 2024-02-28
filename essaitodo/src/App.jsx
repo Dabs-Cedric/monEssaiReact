@@ -2,26 +2,55 @@ import { useState } from "react";
 
 
 function App() {
-  const[todolist, setTodoList] = useState([]);
-
+  const [todoList, setTodoList] = useState([]);
   return (
     <>
-    <form action=""
-    onSubmit={(event) => {
-      event.preventDefault();
-      console.log("coucou");
-      const formData = new formData(event.target);
-      const newTodo = formData.get("todo");
-    }
+      <div>
+        <form
+          action=""
+          onSubmit={(event) => {
+            event.preventDefault();
+            console.log("coucou");
+            const formData = new FormData(event.target);
+            const newTodo = formData.get("todo").trim();
+            if (newTodo !== "" && !todoList.includes(newTodo)) {
+              setTodoList([...todoList, newTodo]);
+            }
+            event.target.reset();
+          }}
+        >
+          <label htmlFor="todo">Votre todo a ajouter</label>
+          <input type="text" id="todo" name="todo" />
+          <input type="submit" />
+        </form>
 
-    }></form>
-    <h1>Todolist</h1>
-    <p>Élément à ajouter</p>
-    <label htmlFor="search">Votre nom</label>
-    <input type="text" />
-    <input type="submit" value="Submit" />
+        {todoList.map((oneTodo) => {
+          return (
+            <li key={oneTodo}>
+              {oneTodo}
+              <span
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  console.log(`supprimer l'élement : ${oneTodo}`);
+
+                  const newTodoList = todoList.filter((currentTodoOfArray) => {
+                    if (currentTodoOfArray !== oneTodo) {
+                      return oneTodo;
+                    }
+                  });
+
+                  setTodoList(newTodoList);
+                }}
+              >
+                X
+              </span>
+            </li>
+          );
+        })}
+      </div>
     </>
-  )
+  );
 }
+
 
 export default App
